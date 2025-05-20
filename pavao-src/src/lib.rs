@@ -1764,8 +1764,13 @@ impl Build {
 
 /// Clone samba repository to the given path.
 fn clone_samba(p: &Path) -> Result<(), String> {
-    let repo_url = "https://git.samba.org/samba.git";
-    let repo = git2::Repository::clone(repo_url, p).map_err(|e| format!("cloning samba: {e}"))?;
+    let repo = match p.join(".git").exists() {
+        true => git2::Repository::open(p).map_err(|e| format!("finding samba: {e}"))?,
+        false => {
+            let repo_url = "https://git.samba.org/samba.git";
+            git2::Repository::clone(repo_url, p).map_err(|e| format!("cloning samba: {e}"))?
+        }
+    };
 
     // checkout tag "samba-4.22.0"
     let tag = format!("samba-{}", version());
