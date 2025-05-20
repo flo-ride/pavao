@@ -1434,9 +1434,10 @@ impl Build {
         let out_dir = self.out_dir.as_ref().ok_or("OUT_DIR not set")?;
         let build_dir = out_dir.join("build");
 
-        if build_dir.exists() {
-            fs::remove_dir_all(&build_dir).map_err(|e| format!("build_dir: {e}"))?;
-        }
+        // TODO: Is there a reason ? + Change to only build dir
+        // if build_dir.exists() {
+        // fs::remove_dir_all(&build_dir).map_err(|e| format!("build_dir: {e}"))?;
+        // }
 
         let inner_dir = build_dir.join("src");
         fs::create_dir_all(&inner_dir).map_err(|e| format!("{}: {e}", inner_dir.display()))?;
